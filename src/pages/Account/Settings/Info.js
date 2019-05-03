@@ -95,7 +95,6 @@ class Info extends Component {
 
   render() {
     const { children, currentUser } = this.props;
-    console.log(currentUser);
     if (!currentUser.id) {
       return '';
     }

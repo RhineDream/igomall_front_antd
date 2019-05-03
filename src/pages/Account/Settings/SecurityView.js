@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { List } from 'antd';
+import ChangePwd from './ChangePwd';
 // import { getTimeDistance } from '@/utils/utils';
 
 const passwordStrength = {
@@ -23,6 +24,23 @@ const passwordStrength = {
 };
 
 class SecurityView extends Component {
+  state = {
+    changePwdModalVisible: false,
+  };
+
+  changePwd = e => {
+    e.preventDefault();
+    this.setState({
+      changePwdModalVisible: true,
+    });
+  };
+
+  onCancel = () => {
+    this.setState({
+      changePwdModalVisible: false,
+    });
+  };
+
   getData = () => [
     {
       title: formatMessage({ id: 'app.settings.security.password' }, {}),
@@ -33,7 +51,7 @@ class SecurityView extends Component {
         </Fragment>
       ),
       actions: [
-        <a>
+        <a onClick={this.changePwd}>
           <FormattedMessage id="app.settings.security.modify" defaultMessage="Modify" />
         </a>,
       ],
@@ -83,6 +101,8 @@ class SecurityView extends Component {
   ];
 
   render() {
+    const { changePwdModalVisible } = this.state;
+
     return (
       <Fragment>
         <List
@@ -94,6 +114,7 @@ class SecurityView extends Component {
             </List.Item>
           )}
         />
+        <ChangePwd visible={changePwdModalVisible} onCancel={this.onCancel} />
       </Fragment>
     );
   }

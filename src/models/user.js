@@ -1,4 +1,4 @@
-import { query as queryUsers, queryCurrent } from '@/services/user';
+import { query as queryUsers, queryCurrent, changeAvatar, changePwd } from '@/services/user';
 
 export default {
   namespace: 'user',
@@ -22,6 +22,18 @@ export default {
         type: 'saveCurrentUser',
         payload: response,
       });
+    },
+    *changeAvatar({ payload, callback }, { call }) {
+      const response = yield call(changeAvatar, payload);
+      if (callback) {
+        callback(response);
+      }
+    },
+    *changePwd({ payload, callback }, { call }) {
+      const response = yield call(changePwd, payload);
+      if (callback) {
+        callback(response);
+      }
     },
   },
 

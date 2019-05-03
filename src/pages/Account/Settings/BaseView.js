@@ -11,23 +11,42 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 // 头像组件 方便以后独立，增加裁剪之类的功能
-const AvatarView = ({ avatar }) => (
-  <Fragment>
-    <div className={styles.avatar_title}>
-      <FormattedMessage id="app.settings.basic.avatar" defaultMessage="Avatar" />
-    </div>
-    <div className={styles.avatar}>
-      <img src={avatar} alt="avatar" />
-    </div>
-    <Upload fileList={[]}>
-      <div className={styles.button_view}>
-        <Button icon="upload">
-          <FormattedMessage id="app.settings.basic.change-avatar" defaultMessage="Change avatar" />
-        </Button>
+const AvatarView = props => {
+  let disabled = false;
+  const { changeAvatar, avatar } = props;
+  const onChange = ({ file }) => {
+    disabled = true;
+    if (file.status === 'done') {
+      changeAvatar(file.response);
+      disabled = false;
+    }
+  };
+
+  return (
+    <Fragment>
+      <div className={styles.avatar_title}>
+        <FormattedMessage id="app.settings.basic.avatar" defaultMessage="Avatar" />
       </div>
-    </Upload>
-  </Fragment>
-);
+      <div className={styles.avatar}>
+        <img src={avatar} alt="avatar" />
+      </div>
+      <Upload
+        showUploadList={false}
+        action="http://localhost:9991/api/file/upload?fileType=image"
+        onChange={onChange}
+      >
+        <div className={styles.button_view}>
+          <Button icon="upload" disabled={disabled}>
+            <FormattedMessage
+              id="app.settings.basic.change-avatar"
+              defaultMessage="Change avatar"
+            />
+          </Button>
+        </div>
+      </Upload>
+    </Fragment>
+  );
+};
 
 const validatorGeographic = (rule, value, callback) => {
   const { province, city } = value;
@@ -56,6 +75,10 @@ const validatorPhone = (rule, value, callback) => {
 }))
 @Form.create()
 class BaseView extends Component {
+  state = {
+    avatar: '',
+  };
+
   componentDidMount() {
     this.setBaseInfo();
   }
@@ -67,16 +90,30 @@ class BaseView extends Component {
       obj[key] = currentUser[key] || null;
       form.setFieldsValue(obj);
     });
+
+    if (currentUser.avatar) {
+      this.setState({
+        avatar: currentUser.avatar,
+      });
+    } else {
+      this.setState({
+        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+      });
+    }
   };
 
-  getAvatarURL() {
-    const { currentUser } = this.props;
-    if (currentUser.avatar) {
-      return currentUser.avatar;
-    }
-    const url = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
-    return url;
-  }
+  changeAvatar = response => {
+    const { dispatch } = this.props;
+    this.setState({
+      avatar: response.url,
+    });
+    dispatch({
+      type: 'user/changeAvatar',
+      payload: {
+        avatar: response.url,
+      },
+    });
+  };
 
   getViewDom = ref => {
     this.view = ref;
@@ -86,6 +123,7 @@ class BaseView extends Component {
     const {
       form: { getFieldDecorator },
     } = this.props;
+    const { avatar } = this.state;
     return (
       <div className={styles.baseView} ref={this.getViewDom}>
         <div className={styles.left}>
@@ -182,7 +220,7 @@ class BaseView extends Component {
           </Form>
         </div>
         <div className={styles.right}>
-          <AvatarView avatar={this.getAvatarURL()} />
+          <AvatarView avatar={avatar} changeAvatar={this.changeAvatar} />
         </div>
       </div>
     );

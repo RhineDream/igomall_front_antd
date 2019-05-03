@@ -13,3 +13,17 @@ export async function queryCurrent() {
     },
   });
 }
+
+export async function changeAvatar(params) {
+  return request1('/admin/changeAvatar', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function changePwd(params) {
+  return request1('/admin/changePwd', {
+    method: 'POST',
+    data: params,
+  });
+}
