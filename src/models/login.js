@@ -15,6 +15,9 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
+      if (response.id) {
+        localStorage.setItem('userId', response.id);
+      }
       yield put({
         type: 'changeLoginStatus',
         payload: response,
@@ -75,6 +78,7 @@ export default {
         ...state,
         status: payload.status,
         type: payload.type,
+        msg: payload.msg,
       };
     },
   },

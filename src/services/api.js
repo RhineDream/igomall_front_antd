@@ -1,5 +1,6 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
+import request1 from '@/utils/request1';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -103,8 +104,14 @@ export async function updateFakeList(params) {
   });
 }
 
+/**
+ * 用户登陆
+ * @param params
+ *    登陆传递的参数
+ * @returns {Promise<void>}
+ */
 export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
+  return request1('/login', {
     method: 'POST',
     data: params,
   });
