@@ -1,4 +1,10 @@
-import { query as queryUsers, queryCurrent, changeAvatar, changePwd } from '@/services/user';
+import {
+  query as queryUsers,
+  queryCurrent,
+  changeAvatar,
+  changePwd,
+  changeMobile,
+} from '@/services/user';
 
 export default {
   namespace: 'user',
@@ -31,6 +37,12 @@ export default {
     },
     *changePwd({ payload, callback }, { call }) {
       const response = yield call(changePwd, payload);
+      if (callback) {
+        callback(response);
+      }
+    },
+    *changeMobile({ payload, callback }, { call }) {
+      const response = yield call(changeMobile, payload);
       if (callback) {
         callback(response);
       }

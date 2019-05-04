@@ -128,6 +128,9 @@ export async function queryNotices(params = {}) {
   return request(`/api/notices?${stringify(params)}`);
 }
 
-export async function getFakeCaptcha(mobile) {
-  return request(`/api/captcha?mobile=${mobile}`);
+export async function getFakeCaptcha(params) {
+  return request1('/sms/send', {
+    method: 'POST',
+    data: params,
+  });
 }

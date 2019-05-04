@@ -43,8 +43,11 @@ export default {
       }
     },
 
-    *getCaptcha({ payload }, { call }) {
-      yield call(getFakeCaptcha, payload);
+    *getCaptcha({ payload, callback }, { call }) {
+      const response = yield call(getFakeCaptcha, payload);
+      if (callback) {
+        callback(response);
+      }
     },
 
     *logout(_, { put }) {

@@ -30,11 +30,20 @@ class LoginPage extends Component {
           const { dispatch } = this.props;
           dispatch({
             type: 'login/getCaptcha',
-            payload: values.mobile,
+            payload: {
+              mobile: values.mobile,
+              type: 0,
+            },
+            callback: response => {
+              if (response.type === 'success') {
+                message.success(response.content);
+              } else {
+                message.error(response.content);
+              }
+            },
           })
             .then(resolve)
             .catch(reject);
-          message.warning(formatMessage({ id: 'app.login.verification-code-warning' }));
         }
       });
     });

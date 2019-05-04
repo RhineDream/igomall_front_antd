@@ -27,3 +27,10 @@ export async function changePwd(params) {
     data: params,
   });
 }
+
+export async function changeMobile(params) {
+  return request1('/admin/changeMobile', {
+    method: 'POST',
+    data: params,
+  });
+}

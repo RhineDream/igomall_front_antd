@@ -192,3 +192,27 @@ export const importCDN = (url, name) =>
     };
     document.head.appendChild(dom);
   });
+
+/**
+ * 19971579891
+ * @param str
+ * @param start
+ * @param length
+ * @returns {*}
+ */
+export function formatStr(str, start, length) {
+  if (str) {
+    if (str.length < start) {
+      return str;
+    }
+    const str1 = str.substring(0, start);
+    const str3 = str.substring(start + length);
+    let str4 = '';
+    for (let i = 0; i < length; i += 1) {
+      str4 += '*';
+    }
+    return str1 + str4 + str3;
+  }
+
+  return str;
+}

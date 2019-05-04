@@ -1,7 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import { List } from 'antd';
+import { connect } from 'dva';
 import ChangePwd from './ChangePwd';
+import { formatStr } from '../../../utils/utils';
+import ChangeMobile from './ChangeMobile';
 // import { getTimeDistance } from '@/utils/utils';
 
 const passwordStrength = {
@@ -23,25 +26,40 @@ const passwordStrength = {
   ),
 };
 
+@connect(({ user }) => ({
+  currentUser: user.currentUser,
+}))
 class SecurityView extends Component {
   state = {
     changePwdModalVisible: false,
+    changeMobileModalVisible: false,
   };
 
   changePwd = e => {
     e.preventDefault();
     this.setState({
       changePwdModalVisible: true,
+      changeMobileModalVisible: false,
+    });
+  };
+
+  changeMobile = e => {
+    e.preventDefault();
+    this.setState({
+      changePwdModalVisible: false,
+      changeMobileModalVisible: true,
     });
   };
 
   onCancel = () => {
     this.setState({
       changePwdModalVisible: false,
+      changeMobileModalVisible: false,
     });
+    window.location.reload(true);
   };
 
-  getData = () => [
+  getData = currentUser => [
     {
       title: formatMessage({ id: 'app.settings.security.password' }, {}),
       description: (
@@ -61,9 +79,9 @@ class SecurityView extends Component {
       description: `${formatMessage(
         { id: 'app.settings.security.phone-description' },
         {}
-      )}：138****8293`,
+      )}：${formatStr(currentUser.mobile, 3, 4)}`,
       actions: [
-        <a>
+        <a onClick={this.changeMobile}>
           <FormattedMessage id="app.settings.security.modify" defaultMessage="Modify" />
         </a>,
       ],
@@ -101,13 +119,13 @@ class SecurityView extends Component {
   ];
 
   render() {
-    const { changePwdModalVisible } = this.state;
-
+    const { changePwdModalVisible, changeMobileModalVisible } = this.state;
+    const { currentUser } = this.props;
     return (
       <Fragment>
         <List
           itemLayout="horizontal"
-          dataSource={this.getData()}
+          dataSource={this.getData(currentUser)}
           renderItem={item => (
             <List.Item actions={item.actions}>
               <List.Item.Meta title={item.title} description={item.description} />
@@ -115,6 +133,7 @@ class SecurityView extends Component {
           )}
         />
         <ChangePwd visible={changePwdModalVisible} onCancel={this.onCancel} />
+        <ChangeMobile visible={changeMobileModalVisible} onCancel={this.onCancel} />
       </Fragment>
     );
   }
