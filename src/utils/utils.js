@@ -216,3 +216,25 @@ export function formatStr(str, start, length) {
 
   return str;
 }
+
+export function formatRangeDate(rangeDate) {
+  if (rangeDate) {
+    let beginDate = '';
+    let endDate = '';
+    if (rangeDate[0]) {
+      beginDate = moment(rangeDate[0]).format('YYYY-MM-DD 00:00:00');
+    }
+    if (rangeDate[1]) {
+      endDate = moment(rangeDate[1]).format('YYYY-MM-DD 00:00:00');
+    }
+
+    return {
+      beginDate,
+      endDate,
+    };
+  }
+  return {
+    beginDate: '',
+    endDate: '',
+  };
+}

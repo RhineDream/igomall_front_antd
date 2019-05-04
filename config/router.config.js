@@ -291,6 +291,12 @@ export default [
         ],
       },
       {
+        name: 'admin',
+        icon: 'admin',
+        path: '/admin',
+        component: './Admin/List',
+      },
+      {
         component: '404',
       },
     ],
