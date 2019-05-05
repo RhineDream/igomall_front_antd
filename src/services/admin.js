@@ -7,8 +7,14 @@ export async function list(params) {
   });
 }
 
-export async function list1(params) {
-  return request1('/admin/list', {
+export async function save(params) {
+  return request1('/admin/save', {
+    method: 'POST',
+    data: params,
+  });
+}
+export async function edit(params) {
+  return request1('/admin/edit', {
     method: 'POST',
     data: params,
   });

@@ -1,4 +1,4 @@
-import { list } from '@/services/admin';
+import { list, save, edit } from '@/services/admin';
 
 export default {
   namespace: 'admin',
@@ -10,6 +10,7 @@ export default {
       pageSize: 20,
       total: 0,
     },
+    values: {},
   },
 
   effects: {
@@ -23,6 +24,19 @@ export default {
         callback(response);
       }
     },
+    *save({ payload, callback }, { call }) {
+      const response = yield call(save, payload);
+      if (callback) {
+        callback(response);
+      }
+    },
+    *edit({ payload }, { call, put }) {
+      const response = yield call(edit, payload);
+      yield put({
+        type: 'editInfo',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -30,6 +44,12 @@ export default {
       return {
         ...state,
         data: action.payload,
+      };
+    },
+    editInfo(state, action) {
+      return {
+        ...state,
+        values: action.payload,
       };
     },
   },
