@@ -310,6 +310,25 @@ export default [
         ],
       },
       {
+        name: 'role',
+        icon: 'role',
+        path: '/role',
+        routes: [
+          {
+            path: '/role',
+            component: './Role/List',
+          },
+          {
+            path: '/role/add',
+            component: './Role/Add',
+          },
+          {
+            path: '/role/edit/:id',
+            component: './Role/Add',
+          },
+        ],
+      },
+      {
         component: '404',
       },
     ],
