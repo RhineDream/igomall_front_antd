@@ -1,4 +1,4 @@
-import { list, save, edit } from '@/services/role';
+import { list, save, edit, getAll } from '@/services/role';
 
 export default {
   namespace: 'role',
@@ -11,6 +11,7 @@ export default {
       total: 0,
     },
     values: {},
+    roles: [],
   },
 
   effects: {
@@ -37,6 +38,13 @@ export default {
         payload: response,
       });
     },
+    *getAll({ payload }, { call, put }) {
+      const response = yield call(getAll, payload);
+      yield put({
+        type: 'allInfo',
+        payload: Array.isArray(response) ? response : [],
+      });
+    },
   },
 
   reducers: {
@@ -50,6 +58,12 @@ export default {
       return {
         ...state,
         values: action.payload,
+      };
+    },
+    allInfo(state, action) {
+      return {
+        ...state,
+        roles: action.payload,
       };
     },
   },

@@ -19,3 +19,9 @@ export async function edit(params) {
     data: params,
   });
 }
+export async function getAll(params) {
+  return request1('/role/getAll', {
+    method: 'POST',
+    data: params,
+  });
+}

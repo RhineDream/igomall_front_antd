@@ -1,16 +1,17 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import Link from 'umi/link';
 import router from 'umi/router';
-import { FormattedMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Button, Card, message } from 'antd';
+import { Form, Input, Button, Card, message, Checkbox, Row, Col } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 const FormItem = Form.Item;
 
-@connect(({ admin, loading }) => ({
+@connect(({ admin, role, loading }) => ({
   admin,
+  role,
   submitting: loading.effects['admin/edit'],
 }))
 @Form.create()
@@ -25,6 +26,9 @@ class BasicForms extends PureComponent {
       type: 'admin/edit',
       payload: params,
     });
+    dispatch({
+      type: 'role/getAll',
+    });
   }
 
   handleSubmit = e => {
@@ -32,9 +36,13 @@ class BasicForms extends PureComponent {
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        const params = {
+          ...values,
+        };
+        params.roleIds = params.roleIds.join(',');
         dispatch({
           type: 'admin/save',
-          payload: values,
+          payload: params,
           callback: response => {
             if (response.type === 'success') {
               message.success(response.content);
@@ -62,10 +70,21 @@ class BasicForms extends PureComponent {
     }
   };
 
+  renderRoles = roles => {
+    return roles.map(item => (
+      <Col span={8}>
+        <Checkbox value={item.id} key={item.id}>
+          {item.name}
+        </Checkbox>
+      </Col>
+    ));
+  };
+
   render() {
     const {
       submitting,
       admin: { values = {} },
+      role: { roles = [] },
     } = this.props;
     const {
       form: { getFieldDecorator },
@@ -119,31 +138,36 @@ class BasicForms extends PureComponent {
                 ],
               })(<Input autoComplete="off" />)}
             </FormItem>
-            <FormItem {...formItemLayout} label="密码">
-              {getFieldDecorator('password', {
-                initialValue: '',
-                rules: [
-                  {
-                    required: true,
-                    message: '必填',
-                  },
-                ],
-              })(<Input type="password" />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="确认密码">
-              {getFieldDecorator('rePassword', {
-                initialValue: '',
-                rules: [
-                  {
-                    required: true,
-                    message: '必填',
-                  },
-                  {
-                    validator: this.checkPassword,
-                  },
-                ],
-              })(<Input type="password" />)}
-            </FormItem>
+            {values.id ? null : (
+              <Fragment>
+                <FormItem {...formItemLayout} label="密码">
+                  {getFieldDecorator('password', {
+                    initialValue: '',
+                    rules: [
+                      {
+                        required: true,
+                        message: '必填',
+                      },
+                    ],
+                  })(<Input type="password" autoComplete="new-password" />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label="确认密码">
+                  {getFieldDecorator('rePassword', {
+                    initialValue: '',
+                    rules: [
+                      {
+                        required: true,
+                        message: '必填',
+                      },
+                      {
+                        validator: this.checkPassword,
+                      },
+                    ],
+                  })(<Input type="password" autoComplete="new-password" />)}
+                </FormItem>
+              </Fragment>
+            )}
+
             <FormItem {...formItemLayout} label="邮箱">
               {getFieldDecorator('email', {
                 initialValue: values.email || '',
@@ -169,6 +193,21 @@ class BasicForms extends PureComponent {
                   },
                 ],
               })(<Input />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label="角色">
+              {getFieldDecorator('roleIds', {
+                initialValue: values.roleIds || ['2'],
+                rules: [
+                  {
+                    required: true,
+                    message: '必填',
+                  },
+                ],
+              })(
+                <Checkbox.Group>
+                  <Row gutter={8}>{this.renderRoles(roles)}</Row>
+                </Checkbox.Group>
+              )}
             </FormItem>
 
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
