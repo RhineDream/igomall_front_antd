@@ -3,15 +3,15 @@ import { connect } from 'dva';
 import Link from 'umi/link';
 import router from 'umi/router';
 import { FormattedMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Button, Card, message } from 'antd';
+import { Form, Input, Button, Card, message, TreeSelect } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 const FormItem = Form.Item;
 
-@connect(({ role, loading }) => ({
-  role,
-  submitting: loading.effects['role/edit'],
+@connect(({ menu1, loading }) => ({
+  menu1,
+  submitting: loading.effects['menu1/edit'],
 }))
 @Form.create()
 class BasicForms extends PureComponent {
@@ -22,8 +22,12 @@ class BasicForms extends PureComponent {
     } = this.props;
 
     dispatch({
-      type: 'role/edit',
+      type: 'menu1/edit',
       payload: params,
+    });
+
+    dispatch({
+      type: 'menu1/list',
     });
   }
 
@@ -33,12 +37,12 @@ class BasicForms extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
-          type: 'role/save',
+          type: 'menu1/save',
           payload: values,
           callback: response => {
             if (response.type === 'success') {
               message.success(response.content);
-              router.push('/role');
+              router.push('/menu');
             } else {
               message.error(response.content);
             }
@@ -48,10 +52,32 @@ class BasicForms extends PureComponent {
     });
   };
 
+  renderMenuTree = (data, disabled) => {
+    const {
+      menu1: { values = {} },
+    } = this.props;
+    let disable1 = disabled;
+    return data.map(item => {
+      if (values && item.id === values.id) {
+        disable1 = true;
+      }
+      if (item.children && item.children.length > 0) {
+        return (
+          <TreeSelect.TreeNode value={item.id} title={item.name} key={item.id} disabled={disable1}>
+            {this.renderMenuTree(item.children, disable1)}
+          </TreeSelect.TreeNode>
+        );
+      }
+      return (
+        <TreeSelect.TreeNode value={item.id} title={item.name} key={item.id} disabled={disable1} />
+      );
+    });
+  };
+
   render() {
     const {
       submitting,
-      role: { values = {} },
+      menu1: { values = {}, data = [] },
     } = this.props;
     const {
       form: { getFieldDecorator },
@@ -83,6 +109,15 @@ class BasicForms extends PureComponent {
             {getFieldDecorator('id', {
               initialValue: values.id || '',
             })(<Input type="hidden" />)}
+            <FormItem {...formItemLayout} label="上级菜单">
+              {getFieldDecorator('parentId', {
+                initialValue: values.parentId || '',
+              })(
+                <TreeSelect treeDefaultExpandAll showSearch allowClear filterTreeNode>
+                  {this.renderMenuTree(data, false)}
+                </TreeSelect>
+              )}
+            </FormItem>
             <FormItem {...formItemLayout} label="名称">
               {getFieldDecorator('name', {
                 initialValue: values.name || '',
@@ -94,18 +129,22 @@ class BasicForms extends PureComponent {
                 ],
               })(<Input autoComplete="off" />)}
             </FormItem>
-            <FormItem {...formItemLayout} label="描述">
-              {getFieldDecorator('description', {
-                initialValue: values.description || '',
-              })(
-                <Input.TextArea autosize={{ minRows: 4, maxRows: 6 }} style={{ resize: 'none' }} />
-              )}
+            <FormItem {...formItemLayout} label="序号">
+              {getFieldDecorator('order', {
+                initialValue: values.order || '',
+                rules: [
+                  {
+                    pattern: /^(\d+)$/,
+                    message: '只能输入正整数',
+                  },
+                ],
+              })(<Input autoComplete="off" />)}
             </FormItem>
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>
                 <FormattedMessage id="form.save" />
               </Button>
-              <Link to="/role">
+              <Link to="/menu">
                 <Button style={{ marginLeft: 8 }}>返回</Button>
               </Link>
             </FormItem>

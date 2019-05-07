@@ -329,6 +329,25 @@ export default [
         ],
       },
       {
+        name: 'menu',
+        icon: 'menu',
+        path: '/menu',
+        routes: [
+          {
+            path: '/menu',
+            component: './Menu/List',
+          },
+          {
+            path: '/menu/add',
+            component: './Menu/Add',
+          },
+          {
+            path: '/menu/edit/:id',
+            component: './Menu/Add',
+          },
+        ],
+      },
+      {
         component: '404',
       },
     ],
