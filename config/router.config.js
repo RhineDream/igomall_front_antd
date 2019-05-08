@@ -348,6 +348,25 @@ export default [
         ],
       },
       {
+        name: 'permissions',
+        icon: 'permissions',
+        path: '/permissions',
+        routes: [
+          {
+            path: '/permissions',
+            component: './Permissions/List',
+          },
+          {
+            path: '/permissions/add',
+            component: './Permissions/Add',
+          },
+          {
+            path: '/permissions/edit/:id',
+            component: './Permissions/Add',
+          },
+        ],
+      },
+      {
         component: '404',
       },
     ],
