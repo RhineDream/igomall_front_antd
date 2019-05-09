@@ -19,3 +19,9 @@ export async function edit(params) {
     data: params,
   });
 }
+export async function remove(params) {
+  return request1('/admin/delete', {
+    method: 'POST',
+    data: params,
+  });
+}

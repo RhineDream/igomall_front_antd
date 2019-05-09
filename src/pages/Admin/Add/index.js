@@ -194,6 +194,16 @@ class BasicForms extends PureComponent {
                 ],
               })(<Input />)}
             </FormItem>
+            <FormItem {...formItemLayout} label="设置">
+              {getFieldDecorator('isEnabled', {
+                valuePropName: 'checked',
+                initialValue: values.isEnabled || true,
+              })(<Checkbox>是否启用</Checkbox>)}
+              {getFieldDecorator('isLocked', {
+                valuePropName: 'checked',
+                initialValue: values.isLocked || false,
+              })(<Checkbox>是否锁定</Checkbox>)}
+            </FormItem>
             <FormItem {...formItemLayout} label="角色">
               {getFieldDecorator('roleIds', {
                 initialValue: values.roleIds || ['2'],

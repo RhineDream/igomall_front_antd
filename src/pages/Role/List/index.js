@@ -2,7 +2,19 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import Link from 'umi/link';
-import { Row, Col, Form, Input, Icon, Button, DatePicker, Divider, Card } from 'antd';
+import {
+  Row,
+  Col,
+  Form,
+  Input,
+  Icon,
+  Button,
+  DatePicker,
+  Divider,
+  Card,
+  message,
+  Modal,
+} from 'antd';
 import StandardTable from '@/components/StandardTable1';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -62,7 +74,7 @@ class List extends PureComponent {
         <Fragment>
           <Link to={`/role/edit/${record.id}`}>修改</Link>
           <Divider type="vertical" />
-          <a href="">订阅警报</a>
+          <a onClick={e => this.remove(e, record)}>删除</a>
         </Fragment>
       ),
     },
@@ -145,6 +157,44 @@ class List extends PureComponent {
     });
   };
 
+  remove = (e, record) => {
+    const root = this;
+    const { selectedRows } = this.state;
+    console.log(this.state);
+    const ids = record.id || selectedRows.map(item => item.id).join(',');
+
+    if (!ids) {
+      message.error('请选择需要删除的数据');
+      return;
+    }
+
+    e.preventDefault();
+    const { dispatch } = root.props;
+    Modal.confirm({
+      title: '警告',
+      content: '确定删除该条记录?',
+      okText: '确定',
+      cancelText: '取消',
+      okType: 'danger',
+      onOk: () => {
+        dispatch({
+          type: 'role/remove',
+          payload: {
+            ids,
+          },
+          callback: response => {
+            if (response.type === 'success') {
+              message.success(response.content);
+              root.componentDidMount();
+            } else {
+              message.error(response.content);
+            }
+          },
+        });
+      },
+    });
+  };
+
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
@@ -193,6 +243,14 @@ class List extends PureComponent {
                   添加
                 </Button>
               </Link>
+              <Button
+                onClick={e => this.remove(e, {})}
+                icon="delete"
+                type="danger"
+                disabled={selectedRows.length === 0}
+              >
+                删除
+              </Button>
             </div>
             <StandardTable
               selectedRows={selectedRows}
@@ -200,7 +258,6 @@ class List extends PureComponent {
               data={data}
               bordered
               size="small"
-              scroll={{ y: window.innerHeight - 625 }}
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}

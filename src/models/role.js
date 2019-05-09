@@ -1,4 +1,4 @@
-import { list, save, edit, getAll } from '@/services/role';
+import { list, save, edit, getAll, remove } from '@/services/role';
 
 export default {
   namespace: 'role',
@@ -44,6 +44,12 @@ export default {
         type: 'allInfo',
         payload: Array.isArray(response) ? response : [],
       });
+    },
+    *remove({ payload, callback }, { call }) {
+      const response = yield call(remove, payload);
+      if (callback) {
+        callback(response);
+      }
     },
   },
 

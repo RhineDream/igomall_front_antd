@@ -1,4 +1,4 @@
-import { list, save, edit } from '@/services/permissions';
+import { list, save, edit, remove } from '@/services/permissions';
 
 export default {
   namespace: 'permissions',
@@ -31,6 +31,12 @@ export default {
         type: 'editInfo',
         payload: response,
       });
+    },
+    *remove({ payload, callback }, { call }) {
+      const response = yield call(remove, payload);
+      if (callback) {
+        callback(response);
+      }
     },
   },
 

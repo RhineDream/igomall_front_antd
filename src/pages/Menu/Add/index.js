@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import Link from 'umi/link';
 import router from 'umi/router';
 import { FormattedMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Button, Card, message, TreeSelect } from 'antd';
+import { Form, Input, Button, Card, message, TreeSelect, Checkbox } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -128,6 +128,23 @@ class BasicForms extends PureComponent {
                   },
                 ],
               })(<Input autoComplete="off" />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label="链接">
+              {getFieldDecorator('url', {
+                initialValue: values.url || '',
+                rules: [
+                  {
+                    required: true,
+                    message: '必填',
+                  },
+                ],
+              })(<Input autoComplete="off" />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label="设置">
+              {getFieldDecorator('isEnabled', {
+                valuePropName: 'checked',
+                initialValue: values.isEnabled || true,
+              })(<Checkbox>是否启用</Checkbox>)}
             </FormItem>
             <FormItem {...formItemLayout} label="序号">
               {getFieldDecorator('order', {

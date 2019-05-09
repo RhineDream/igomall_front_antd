@@ -25,3 +25,9 @@ export async function getAll(params) {
     data: params,
   });
 }
+export async function remove(params) {
+  return request1('/role/delete', {
+    method: 'POST',
+    data: params,
+  });
+}

@@ -1,4 +1,4 @@
-import { list, save, edit } from '@/services/admin';
+import { list, save, edit, remove } from '@/services/admin';
 
 export default {
   namespace: 'admin',
@@ -36,6 +36,12 @@ export default {
         type: 'editInfo',
         payload: response,
       });
+    },
+    *remove({ payload, callback }, { call }) {
+      const response = yield call(remove, payload);
+      if (callback) {
+        callback(response);
+      }
     },
   },
 
