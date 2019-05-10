@@ -7,6 +7,8 @@ import StandardTable from '@/components/StandardTable2';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 import styles from './index.less';
+import Authorized from '../../../components/Authorized/Authorized';
+import Exception403 from '../../Exception/403';
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ permissions, loading }) => ({
@@ -123,11 +125,13 @@ class List extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListOperator}>
-              <Link to="/permissions/add">
-                <Button icon="plus" type="primary">
-                  添加
-                </Button>
-              </Link>
+              <Authorized authority={['admin:permissions:add']} noMatch={Exception403}>
+                <Link to="/permissions/add">
+                  <Button icon="plus" type="primary">
+                    添加
+                  </Button>
+                </Link>
+              </Authorized>
               <Button
                 onClick={e => this.remove(e, {})}
                 icon="delete"

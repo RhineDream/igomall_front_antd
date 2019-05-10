@@ -1,4 +1,4 @@
-import { notification } from 'antd';
+import { notification, message } from 'antd';
 import router from 'umi/router';
 import axios from 'axios';
 import qs from 'qs';
@@ -25,6 +25,8 @@ const codeMessage = {
 
 const checkStatus = response => {
   if (response.status === 299) {
+    message.destroy();
+    message.error('请先登录');
     // 未登录
     router.push('/user/login');
   }

@@ -3,18 +3,19 @@ import { connect } from 'dva';
 import Link from 'umi/link';
 import router from 'umi/router';
 import { FormattedMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Button, Card, message } from 'antd';
+import { Form, Input, Button, Card, message, Transfer } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 const FormItem = Form.Item;
 
-@connect(({ role, loading }) => ({
+@connect(({ role, permissions, loading }) => ({
   role,
+  permissions,
   submitting: loading.effects['role/edit'],
 }))
 @Form.create()
-class BasicForms extends PureComponent {
+class Add extends PureComponent {
   componentDidMount() {
     const {
       match: { params = {} },
@@ -24,6 +25,9 @@ class BasicForms extends PureComponent {
     dispatch({
       type: 'role/edit',
       payload: params,
+    });
+    dispatch({
+      type: 'permissions/getAll',
     });
   }
 
@@ -48,15 +52,28 @@ class BasicForms extends PureComponent {
     });
   };
 
+  renderPermissionItem = item => {
+    const customLabel = (
+      <span className="custom-item">
+        {item.name} - {item.menuName}
+      </span>
+    );
+
+    return {
+      label: customLabel,
+      value: item.url,
+    };
+  };
+
   render() {
     const {
       submitting,
       role: { values = {} },
+      permissions: { getAllData = [] },
     } = this.props;
     const {
       form: { getFieldDecorator },
     } = this.props;
-
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -101,6 +118,28 @@ class BasicForms extends PureComponent {
                 <Input.TextArea autosize={{ minRows: 4, maxRows: 6 }} style={{ resize: 'none' }} />
               )}
             </FormItem>
+            <FormItem {...formItemLayout} label="权限">
+              {getFieldDecorator('permissions', {
+                valuePropName: 'targetKeys',
+                initialValue: values.permissions || [],
+                rules: [{ required: true, message: '至少拥有一个权限' }],
+              })(
+                <Transfer
+                  listStyle={{
+                    width: '47%',
+                    height: 300,
+                  }}
+                  height={800}
+                  showSearch
+                  rowKey={record => record.url}
+                  dataSource={getAllData}
+                  render={this.renderPermissionItem}
+                  filterOption={(inputValue, option) =>
+                    option.name.indexOf(inputValue) >= 0 || option.menuName.indexOf(inputValue) >= 0
+                  }
+                />
+              )}
+            </FormItem>
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>
                 <FormattedMessage id="form.save" />
@@ -116,4 +155,4 @@ class BasicForms extends PureComponent {
   }
 }
 
-export default BasicForms;
+export default Add;

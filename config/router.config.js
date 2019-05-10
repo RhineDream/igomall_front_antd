@@ -24,7 +24,7 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/dashboard/analysis', authority: ['admin', 'user'] },
+      { path: '/', redirect: '/dashboard/analysis' },
       {
         path: '/dashboard',
         name: 'dashboard',
@@ -354,14 +354,17 @@ export default [
         routes: [
           {
             path: '/permissions',
+            authority: ['admin:permissions:list'],
             component: './Permissions/List',
           },
           {
             path: '/permissions/add',
+            authority: ['admin:permissions:add'],
             component: './Permissions/Add',
           },
           {
             path: '/permissions/edit/:id',
+            authority: ['admin:permissions:edit'],
             component: './Permissions/Add',
           },
         ],

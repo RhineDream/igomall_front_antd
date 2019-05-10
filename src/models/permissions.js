@@ -1,4 +1,4 @@
-import { list, save, edit, remove } from '@/services/permissions';
+import { list, save, edit, remove, getAll } from '@/services/permissions';
 
 export default {
   namespace: 'permissions',
@@ -6,6 +6,7 @@ export default {
   state: {
     data: [],
     values: {},
+    getAllData: [],
   },
 
   effects: {
@@ -38,6 +39,13 @@ export default {
         callback(response);
       }
     },
+    *getAll({ payload }, { call, put }) {
+      const response = yield call(getAll, payload);
+      yield put({
+        type: 'getAllInfo',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -51,6 +59,12 @@ export default {
       return {
         ...state,
         values: action.payload,
+      };
+    },
+    getAllInfo(state, action) {
+      return {
+        ...state,
+        getAllData: action.payload,
       };
     },
   },

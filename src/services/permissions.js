@@ -25,3 +25,9 @@ export async function remove(params) {
     data: params,
   });
 }
+export async function getAll(params) {
+  return request1('/permissions/getAll', {
+    method: 'POST',
+    data: params,
+  });
+}
