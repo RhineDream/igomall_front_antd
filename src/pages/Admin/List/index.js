@@ -55,6 +55,10 @@ class List extends PureComponent {
       dataIndex: 'email',
     },
     {
+      title: '手机号',
+      dataIndex: 'mobile',
+    },
+    {
       title: '部门',
       dataIndex: 'department',
     },
