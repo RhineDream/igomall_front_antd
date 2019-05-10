@@ -5,6 +5,7 @@ import {
   changePwd,
   changeMobile,
 } from '@/services/user';
+import { setAuthority } from '@/utils/authority';
 
 export default {
   namespace: 'user',
@@ -57,9 +58,11 @@ export default {
       };
     },
     saveCurrentUser(state, action) {
+      const { user = {}, currentAuthority = [] } = action.payload;
+      setAuthority(currentAuthority);
       return {
         ...state,
-        currentUser: action.payload || {},
+        currentUser: user || {},
       };
     },
     changeNotifyCount(state, action) {
