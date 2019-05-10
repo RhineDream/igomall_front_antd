@@ -116,7 +116,7 @@ class BasicForms extends PureComponent {
             {getFieldDecorator('id', {
               initialValue: values.id || '',
             })(<Input type="hidden" />)}
-            <FormItem {...formItemLayout} label="用户名">
+            <FormItem {...formItemLayout} label="用户名" help="一旦设置将不允许修改">
               {getFieldDecorator('username', {
                 initialValue: values.username || '',
                 rules: [
@@ -125,7 +125,7 @@ class BasicForms extends PureComponent {
                     message: '必填',
                   },
                 ],
-              })(<Input />)}
+              })(<Input disabled={values.id} />)}
             </FormItem>
             <FormItem {...formItemLayout} label="姓名">
               {getFieldDecorator('name', {
@@ -194,17 +194,20 @@ class BasicForms extends PureComponent {
                 ],
               })(<Input />)}
             </FormItem>
-            <FormItem {...formItemLayout} label="手机号">
-              {getFieldDecorator('mobile', {
-                initialValue: values.mobile || '',
-                rules: [
-                  {
-                    required: true,
-                    message: '必填',
-                  },
-                ],
-              })(<Input />)}
-            </FormItem>
+            {values.id ? null : (
+              <FormItem {...formItemLayout} label="手机号">
+                {getFieldDecorator('mobile', {
+                  initialValue: values.mobile || '',
+                  rules: [
+                    {
+                      required: true,
+                      message: '必填',
+                    },
+                  ],
+                })(<Input />)}
+              </FormItem>
+            )}
+
             <FormItem {...formItemLayout} label="设置">
               {getFieldDecorator('isEnabled', {
                 valuePropName: 'checked',
@@ -225,7 +228,7 @@ class BasicForms extends PureComponent {
                   },
                 ],
               })(
-                <Checkbox.Group>
+                <Checkbox.Group style={{ width: '100%' }}>
                   <Row gutter={8}>{this.renderRoles(roles)}</Row>
                 </Checkbox.Group>
               )}

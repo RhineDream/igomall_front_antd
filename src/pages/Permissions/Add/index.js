@@ -173,6 +173,7 @@ class BasicForms extends PureComponent {
               <FormItem {...formItemLayout} label="菜单">
                 {getFieldDecorator('menuId', {
                   initialValue: values.menuId || '',
+                  rules: [{ required: true, message: '必填' }],
                 })(
                   <TreeSelect
                     treeDefaultExpandAll

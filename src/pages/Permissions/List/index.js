@@ -21,6 +21,10 @@ class List extends PureComponent {
 
   columns = [
     {
+      title: '菜单',
+      dataIndex: 'menuName',
+    },
+    {
       title: '名称',
       dataIndex: 'name',
     },

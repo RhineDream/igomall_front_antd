@@ -76,7 +76,7 @@ class List extends PureComponent {
       okType: 'danger',
       onOk: () => {
         dispatch({
-          type: 'menu/remove',
+          type: 'menu1/remove',
           payload: {
             ids,
           },
