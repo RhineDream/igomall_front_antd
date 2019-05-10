@@ -194,6 +194,17 @@ class BasicForms extends PureComponent {
                 ],
               })(<Input />)}
             </FormItem>
+            <FormItem {...formItemLayout} label="手机号">
+              {getFieldDecorator('mobile', {
+                initialValue: values.mobile || '',
+                rules: [
+                  {
+                    required: true,
+                    message: '必填',
+                  },
+                ],
+              })(<Input />)}
+            </FormItem>
             <FormItem {...formItemLayout} label="设置">
               {getFieldDecorator('isEnabled', {
                 valuePropName: 'checked',
