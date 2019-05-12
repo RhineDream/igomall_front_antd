@@ -7,6 +7,7 @@ import StandardTable from '@/components/StandardTable2';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 import styles from './index.less';
+import Authorized from '../../../components/Authorized/Authorized';
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ menu1, loading }) => ({
@@ -110,11 +111,13 @@ class List extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListOperator}>
-              <Link to="/menu/add">
-                <Button icon="plus" type="primary">
-                  添加
-                </Button>
-              </Link>
+              <Authorized authority={['admin:menu:add']}>
+                <Link to="/menu/add">
+                  <Button icon="plus" type="primary">
+                    添加
+                  </Button>
+                </Link>
+              </Authorized>
               <Button
                 onClick={e => this.remove(e, {})}
                 icon="delete"

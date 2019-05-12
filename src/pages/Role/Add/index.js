@@ -126,10 +126,9 @@ class Add extends PureComponent {
               })(
                 <Transfer
                   listStyle={{
-                    width: '47%',
+                    width: '44%',
                     height: 300,
                   }}
-                  height={800}
                   showSearch
                   rowKey={record => record.url}
                   dataSource={getAllData}

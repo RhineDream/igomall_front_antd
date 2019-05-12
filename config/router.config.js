@@ -294,13 +294,16 @@ export default [
         name: 'admin',
         icon: 'admin',
         path: '/admin',
+        authority: ['admin:admin:list'],
         routes: [
           {
             path: '/admin',
+            authority: ['admin:admin:list'],
             component: './Admin/List',
           },
           {
             path: '/admin/add',
+            authority: ['admin:admin:add'],
             component: './Admin/Add',
           },
           {
@@ -313,17 +316,21 @@ export default [
         name: 'role',
         icon: 'role',
         path: '/role',
+        authority: ['admin:role:list'],
         routes: [
           {
             path: '/role',
+            authority: ['admin:role:list'],
             component: './Role/List',
           },
           {
             path: '/role/add',
+            authority: ['admin:role:add'],
             component: './Role/Add',
           },
           {
             path: '/role/edit/:id',
+            authority: ['admin:role:edit'],
             component: './Role/Add',
           },
         ],

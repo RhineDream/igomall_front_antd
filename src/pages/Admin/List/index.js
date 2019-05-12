@@ -21,6 +21,7 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 import styles from './index.less';
 import { formatRangeDate } from '@/utils/utils';
+import Authorized from '@/components/Authorized/Authorized';
 
 const FormItem = Form.Item;
 const getValue = obj =>
@@ -77,9 +78,13 @@ class List extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <Link to={`/admin/edit/${record.id}`}>修改</Link>
+          <Authorized authority={['admin:admin:edit']}>
+            <Link to={`/admin/edit/${record.id}`}>修改</Link>
+          </Authorized>
           <Divider type="vertical" />
-          <a onClick={e => this.remove(e, record)}>删除</a>
+          <Authorized authority={['admin:admin:delete']}>
+            <a onClick={e => this.remove(e, record)}>删除</a>
+          </Authorized>
         </Fragment>
       ),
     },
@@ -304,19 +309,23 @@ class List extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
-              <Link to="/admin/add">
-                <Button icon="plus" type="primary">
-                  添加
+              <Authorized authority={['admin:admin:add']}>
+                <Link to="/admin/add">
+                  <Button icon="plus" type="primary">
+                    添加
+                  </Button>
+                </Link>
+              </Authorized>
+              <Authorized authority={['admin:admin:delete']}>
+                <Button
+                  onClick={e => this.remove(e, {})}
+                  icon="delete"
+                  type="danger"
+                  disabled={selectedRows.length === 0}
+                >
+                  删除
                 </Button>
-              </Link>
-              <Button
-                onClick={e => this.remove(e, {})}
-                icon="delete"
-                type="danger"
-                disabled={selectedRows.length === 0}
-              >
-                删除
-              </Button>
+              </Authorized>
             </div>
             <StandardTable
               selectedRows={selectedRows}
